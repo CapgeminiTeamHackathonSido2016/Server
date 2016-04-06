@@ -45,7 +45,7 @@ public class Pneu implements Serializable {
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "pression_normale")
     private BigDecimal pressionNormale;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idPneu")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "pneu")
     private List<Message> messageList;
     @JoinColumn(name = "id_camion", referencedColumnName = "id_camion")
     @ManyToOne

@@ -1,5 +1,6 @@
 package com.capgemini.hackaton2016.model;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -12,8 +13,10 @@ public class AnalyticsPression {
     private Integer idCamion;
     private Integer idPneu;
     private Date timestamp;
-    private Date latitude;
-    private Date longitude;
+    private BigDecimal latitude;
+    private BigDecimal longitude;
+    private BigDecimal pression;
+    private boolean alerte;
 
     public AnalyticsPression() {
     }
@@ -50,19 +53,35 @@ public class AnalyticsPression {
         this.timestamp = timestamp;
     }
 
-    public Date getLatitude() {
+    public BigDecimal getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(Date latitude) {
+    public void setLatitude(BigDecimal latitude) {
         this.latitude = latitude;
     }
 
-    public Date getLongitude() {
+    public BigDecimal getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(Date longitude) {
+    public void setLongitude(BigDecimal longitude) {
         this.longitude = longitude;
+    }
+
+    public BigDecimal getPression() {
+        return pression;
+    }
+
+    public void setPression(BigDecimal pression) {
+        this.pression = pression;
+    }
+
+    public boolean isAlerte() {
+        return alerte;
+    }
+
+    public void setAlerte(boolean alerte) {
+        this.alerte = alerte;
     }
 }

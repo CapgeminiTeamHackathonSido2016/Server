@@ -1,6 +1,7 @@
 package com.capgemini.hackaton2016.dao;
 
 import com.capgemini.hackaton2016.model.AnalyticsPression;
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -9,5 +10,5 @@ import java.util.List;
  */
 public interface AnalyticsDao {
     
-    List<AnalyticsPression> getMessagesAnalytics();
+    List<AnalyticsPression> getMessagesAnalytics() throws SQLException;
 }

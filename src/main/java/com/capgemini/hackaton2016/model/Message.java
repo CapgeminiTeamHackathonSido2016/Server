@@ -45,10 +45,10 @@ public class Message implements Serializable {
     private Date dateCreation;
     @JoinColumn(name = "id_trajet", referencedColumnName = "id_trajet")
     @ManyToOne
-    private Trajet idTrajet;
+    private Trajet trajet;
     @JoinColumn(name = "id_pneu", referencedColumnName = "id_pneu")
     @ManyToOne(optional = false)
-    private Pneu idPneu;
+    private Pneu pneu;
 
     public Message() {
     }
@@ -89,20 +89,20 @@ public class Message implements Serializable {
         this.pression = pression;
     }
 
-    public Trajet getIdTrajet() {
-        return idTrajet;
+    public Trajet getTrajet() {
+        return trajet;
     }
 
-    public void setIdTrajet(Trajet idTrajet) {
-        this.idTrajet = idTrajet;
+    public void setTrajet(Trajet trajet) {
+        this.trajet = trajet;
     }
 
-    public Pneu getIdPneu() {
-        return idPneu;
+    public Pneu getPneu() {
+        return pneu;
     }
 
-    public void setIdPneu(Pneu idPneu) {
-        this.idPneu = idPneu;
+    public void setPneu(Pneu pneu) {
+        this.pneu = pneu;
     }
 
     public Date getDateCreation() {

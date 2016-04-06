@@ -46,7 +46,7 @@ public class Trajet implements Serializable {
     private BigDecimal latitudeArrivee;
     @Column(name = "longitude_arrivee")
     private BigDecimal longitudeArrivee;
-    @OneToMany(mappedBy = "idTrajet")
+    @OneToMany(mappedBy = "trajet")
     private List<Message> messageList;
     @JoinColumn(name = "id_camion", referencedColumnName = "id_camion")
     @ManyToOne(optional = false)
