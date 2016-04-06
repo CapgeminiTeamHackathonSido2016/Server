@@ -18,12 +18,20 @@
 	<br/>
 		<div id="position"></div>
 	<br/>
+		<input type="button" value="Itinéraire" onclick="fLaunchSearch(0);"/>
+	</br>
+
+	<br/>
+		<input type="button" value="Recherche" onclick="fLaunchPoiSearch();"/>
+	</br>
+
+	<br/>
 	<!-- Map-->
 	<div id="map_container"></div>
 
-	<div id="dRoadsheet"></div>
+	<div id="dRoadsheet" style="visibility: hidden"></div>
 
-	<div id="dOutputMap">
+	<div id="dOutputMap" style="visibility: hidden">
 		<form action="">
 			<fieldset>
 			<legend>Map</legend>
@@ -33,179 +41,10 @@
 			</fieldset>
 		</form>
 	</div>
-	
-	<input type="button" value="Search" onclick="fLaunchSearch(0);"/>
 
 </center>
 	<script src="http://apijsv2.viamichelin.com/apijsv2/api/js?key=JSBS20160209165303164801960098$170741&lang=fra" type="text/javascript"></script>
-	<script type="text/javascript">
-
-		//Get the current position
-		function fGetCurrentPosition() 
-		{
-			if(navigator.geolocation){
-				//get position from GPS
-				return ViaMichelin.Api.Constants.Map.FROM_GEOLOCATION;	
-			}else{
-				return { coords : {lon: 4.83642, lat: 45.75724}};
-			}
-		};
-		var myMap = null;
-
-		function fGetBestConf(conf) {
-			 var useragent = navigator.userAgent;
-			 if(useragent.indexOf('iPhone') != -1 || useragent.indexOf('Android') != -1 || useragent.indexOf('iPad') != -1 ) {
-			  conf.container.style.width = '100%';
-			  conf.container.style.height = '100%';
-			  conf.skin = ViaMichelin.Api.Constants.Map.SKIN.MOBILE.SMALL;
-			  //Display geolocation control
-			  conf.geolocationControl = true;   
-			  if(useragent.indexOf('iPad') != -1){
-			   conf.skin = ViaMichelin.Api.Constants.Map.SKIN.MOBILE.LARGE;
-			  }
-			 }else{  
-			  conf.skin = ViaMichelin.Api.Constants.Map.SKIN.DEFAULT;
-			  //Display service POIs selector
-			  conf.menuPoiControl = true;
-			  //Display only Service station layer
-			  conf.menuPoiControlOptions = {mode:ViaMichelin.Api.Constants.Map.POI.MODE.MORE, layer:['STS']};
-			  //Display situation map
-			  conf.situationMapControl =false;
-			 }
-			 return conf;
-			};//fGetBestConf
-
-		
-
-function fLaunchSearch(itiIdx){{
-				 currentItiIdx = itiIdx;
-				 //Initialize map
-				 if(null == myMap){
-				  VMLaunch("ViaMichelin.Api.Map",{ 
-				    container : $_id("map_container"),//Map container (DOM element)     
-				    //Initializes map center with data from another service called in the onSuccess callback
-				    center : ViaMichelin.Api.Constants.Map.DELAY_LOADING,
-				    mapTypeControl : true
-				    },{
-				    onInit: function(serviceMap){
-				     myMap = serviceMap;
-				    },
-				    onSuccess: function(){
-				     fLaunchRoutePlanner(itiIdx);
-				    }});//Initial zoom level
-				 }else{//Clean up
-				  
-				  }
-				  fLaunchRoutePlanner(itiIdx);
-				 }
-				};//fLaunchSearch
-
-				// Fucntion pour calculer l'itinéare d'un point à un autre 
-				function fLaunchRoutePlanner(itiIdx){
-					 //Launch itinerary computation
-					 VMLaunch("ViaMichelin.Api.Itinerary", {
-					   steps:[//Array of Geo coodinates
-					    {address: {
-							city: "lyon",
-							countryISOCode: "fra"}},
-						{address: {
-							city: "paris", 
-							countryISOCode: "fra"}}
-					    ],
-
-					   itit: ViaMichelin.Api.Constants.Itinerary.ITINERARY_TYPE.RECOMMENDED,
-					   favMotorways: false,
-					   avoidBorders: false,
-					   avoidTolls: false,
-					   avoidCCZ: false,
-					   avoidORC: false,
-					   //Map to display itinerary trace with automatic redraw to fit iti
-					   map: {container: $_id("map_container"), focus: true},
-
-					   roadsheet: $_id("dRoadsheet"),
-					   multipleIti: false,
-					   distUnit: ViaMichelin.Api.Constants.Itinerary.DIST_UNIT.MILES
-					  },{
-					   onSuccess : function (result) {
-					    if(0 == currentItiIdx){
-					     //Loop through summaries to extract multiple itineraries
-					     var out = 'Suggested routes: <select onchange="fLaunchSearch(this.value)">';
-					     for (var itiIdx = 0; itiIdx < result.header.summaries.length; ++itiIdx){
-					      var name = '';
-					      if(0 == result.header.summaries[itiIdx].names.length){
-					       out += '<option value="0"/>No name because only one route</option>';
-					      }else{
-					       //Concatenate all names
-					       for (var i = 0; i < result.header.summaries[itiIdx].names.length; ++i){
-					        name += result.header.summaries[itiIdx].names[i] + ' ';
-					       }
-					       out += '<option value="' + itiIdx + '"/>' + name + '</option>';
-					      }
-					     }
-					     out += '</select>';
-					     $_id("dMultipleIti").innerHTML = out;
-					    }else{
-					     $_id("dMultipleIti").value = currentItiIdx;
-					    }
-					    $_id("dSummary").innerHTML = "<br/>Distance : " +  result.header.summaries[currentItiIdx].totalDist.toFixed(1) + 'mi<br/>Time : ' + result.header.summaries[0].totalTime + 's';
-					   },
-					   onError : function (error) {
-					    alert('Whoops' + error);
-					   }});
-					};//fLaunchRoutePlanner
-
-
-var lati = null;
-var longi = null;
-
-function fLoadMap(){
-			 var commonConf = {//Service parameters
-			  //Map container (DOM element)
-			  container : $_id("map_container"),
-			  //Initial geographical coordinates of the map center
-			  center : fGetCurrentPosition(),
-			  //You can also use an address
-			  //center : {address:{city:"Paris", countryISOCode: "FRA"}},
-			  //You can also use a locID (already includes the best zoom level)
-			  //center : {locId:"31NDFhcWsxMGNOVEV1TlRBd01qUT1jTFRBdU1USTNNRFk9"},
-			  //You can also use a (dbID, poiID) pair (which implicitely includes the best zoom level)
-			  //center : {poi:{db:163978,id=ND1216}},
-			  //You can also use current position (from a GPS sensor)
-			  //center : ViaMichelin.Api.Constants.Map.FROM_GEOLOCATION,
-			  //Initial zoom level. See onSuccess below if center is a locID or a poiID
-			  zoom : 12,
-			  markerControl:true,
-			  tileOpacity:1,
-			  //Display map type selector
-			  mapTypeControl : true,
-			  //Set map type
-			  mapTypeControlOptions : {type: ViaMichelin.Api.Constants.Map.TYPE.LIGHT},
-			  //Display geolocation selector
-			  geolocationControl : true
-			 };
-			 VMLaunch("ViaMichelin.Api.Map", fGetBestConf(commonConf),{
-			   onInit: function(serviceMap){
-			    myMap = serviceMap;
-			   },
-			   onClick: function(event)
-			   {
-			    //Display current mouse coordinates
-			    lati = event.lat.toFixed(5);
-			    longi = event.lon.toFixed(5);
-
-			    $_id("position").innerHTML = "Center geo-coordinates of the map are (" + event.lon.toFixed(5)  + ', ' + event.lat.toFixed(5) + ')';
-			   },
-			   onInitError: function(){
-			    alert('Whoops Map cannot be loaded!');
-			   }/*,
-			  //If center is a locID or a (dbID, poiID) pair, you must uncomment this section
-			  //to set the zoom level defined in the zoom parameter
-			  onSuccess: function(){
-			    this.refresh();
-			  }*/
-			  });
-			};//fLoadMap 
-			
+	<script src="./sido.js" type="text/javascript">			
 	</script>
 	</body>
 </html>
