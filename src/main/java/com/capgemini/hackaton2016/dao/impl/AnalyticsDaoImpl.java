@@ -2,6 +2,8 @@ package com.capgemini.hackaton2016.dao.impl;
 
 import com.capgemini.hackaton2016.dao.AnalyticsDao;
 import com.capgemini.hackaton2016.model.AnalyticsPression;
+
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -86,6 +88,48 @@ public class AnalyticsDaoImpl implements AnalyticsDao {
             }
 
             return liste;
+        } catch (Exception e) {
+            log.error("Erreur de BD", e);
+            throw new SQLException(e);
+        } finally {
+            if (ps != null) {
+                ps.close();
+            }
+            if (cnx != null) {
+                cnx.close();
+            }
+        }
+    }
+
+    @Override
+    public BigDecimal[] localiserCamion(Short idCamion) throws SQLException {
+        Connection cnx = null;
+        PreparedStatement ps = null;
+
+        try {
+            cnx = ds.getConnection();
+            ps = cnx.prepareStatement(
+                    "select latitude , longitude " +
+                            "from message " +
+                            "where id_message = ( " +
+                            "select max(m.id_message) " +
+                            "from message m " +
+                            "join pneu p on p.id_pneu = m.id_pneu " +
+                            "where p.id_camion = ?" +
+                            ")"
+            );
+            ps.setShort(1, idCamion);
+            ps.setMaxRows(1);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs != null && rs.next()) {
+                BigDecimal latitude = rs.getBigDecimal("latitude");
+                BigDecimal longitude = rs.getBigDecimal("longitude");
+                return new BigDecimal[]{latitude, longitude};
+            } else {
+                return new BigDecimal[]{};
+            }
         } catch (Exception e) {
             log.error("Erreur de BD", e);
             throw new SQLException(e);

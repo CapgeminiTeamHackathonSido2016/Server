@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:v="urn:schemas-microsoft-com:vml">
+<h:head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>Power driver</title>
+    <style type="text/css">
+        #map_container {
+            width: 800px;
+            height: 600px;
+            font-family: Arial
+        }
+    </style>
+</h:head>
+<h:body onload="fLoadMap();">
+
+    <!-- Current position-->
+    <div id="position"></div>
+
+    <!-- Map-->
+    <div id="map_container"></div>
+
+    <div id="dRoadsheet" style="visibility: hidden"></div>
+
+    <div id="dOutputMap" style="visibility: hidden">
+        <form action="">
+            <fieldset>
+                <legend>Map</legend>
+                <div id='dMultipleIti'></div>
+                <div id="dMap"></div>
+                <div id="dSummary"></div>
+            </fieldset>
+        </form>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="http://apijsv2.viamichelin.com/apijsv2/api/js?key=JSBS20160209165303164801960098$170741&amp;lang=fra"
+            type="text/javascript"></script>
+    <script src="sido.js" type="text/javascript">
+    </script>
+    <script type="text/javascript">
+        setTimeout(function(){
+            window.location = '/hackaton2016/carte_dyna.jsf?latitude='.concat(#{carteBean.latitude}).concat('&amp;longitude=').concat(#{carteBean.longitude});
+        }, 5000);
+    </script>
+</h:body>
+</html>

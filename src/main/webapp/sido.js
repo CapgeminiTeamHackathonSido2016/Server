@@ -1,26 +1,21 @@
-var longitude = null;
-var latitude = null;
+function getParameterByName(name, url) {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)", "i"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
 
-$.get(
-    'localhost:8080/hackaton2016/servers/camions/localisation/1',
-    function(data) 
-    { 
-      longitude = $(data).find('longitude').text();
-
-      latitude = $(data).find('latitude').text();
-    }
-);
-
+var latitude = getParameterByName('latitude');
+var longitude = getParameterByName('longitude');
 
 //Get the current position
-    function fGetCurrentPosition() 
+    function fGetCurrentPosition()
     {
-      if(navigator.geolocation){
         //get position from GPS
-        return { coords : {lon: longitude, lat: latitude}}; 
-      }else{
-        return { coords : {lon: 4.83642, lat: 45.75724}};
-      }
+        return { coords : {lon: longitude, lat: latitude}};
     };
     
     var myMap = null;

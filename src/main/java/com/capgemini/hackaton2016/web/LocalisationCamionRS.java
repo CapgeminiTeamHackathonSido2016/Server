@@ -1,7 +1,11 @@
 package com.capgemini.hackaton2016.web;
 
+import com.capgemini.hackaton2016.services.AnalyticsService;
+
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
+import javax.inject.Inject;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Path;
@@ -20,8 +24,8 @@ import javax.ws.rs.core.MediaType;
 @RequestScoped
 public class LocalisationCamionRS {
 
-    @Context
-    private UriInfo context;
+    @Inject
+    private AnalyticsService analyticsService;
 
     /**
      * Creates a new instance of LocalisationCamionRS
@@ -40,9 +44,12 @@ public class LocalisationCamionRS {
     public Map<String, String> getXml(@PathParam(value = "idCamion") Short idCamion) {
         Map<String, String> localisation = new HashMap<>();
 
-        localisation.put("latitude", "12");
-        localisation.put("longitude", "4");
+        BigDecimal[] coordonnees = analyticsService.localiserCamion(idCamion);
 
+        if (coordonnees != null) {
+            localisation.put("latitude", coordonnees[0].toString());
+            localisation.put("longitude", coordonnees[1].toString());
+        }
         return localisation;
     }
 }

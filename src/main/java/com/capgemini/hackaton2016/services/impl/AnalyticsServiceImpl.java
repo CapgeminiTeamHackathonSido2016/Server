@@ -3,6 +3,8 @@ package com.capgemini.hackaton2016.services.impl;
 import com.capgemini.hackaton2016.dao.AnalyticsDao;
 import com.capgemini.hackaton2016.model.AnalyticsPression;
 import com.capgemini.hackaton2016.services.AnalyticsService;
+
+import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +36,15 @@ public class AnalyticsServiceImpl implements AnalyticsService {
         } catch (SQLException e) {
             log.error("Erreur de BD", e);
             return new ArrayList<>(0);
+        }
+    }
+
+    public BigDecimal[] localiserCamion(Short idCamion) {
+        try {
+            return analyticsDao.localiserCamion(idCamion);
+        } catch (SQLException e) {
+            log.error("Erreur de BD", e);
+            return new BigDecimal[]{};
         }
     }
     
