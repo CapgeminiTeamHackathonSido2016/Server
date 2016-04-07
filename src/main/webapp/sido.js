@@ -1,13 +1,28 @@
+var longitude = null;
+var latitude = null;
+
+$.get(
+    'localhost:8080/hackaton2016/servers/camions/localisation/1',
+    function(data) 
+    { 
+      longitude = $(data).find('longitude').text();
+
+      latitude = $(data).find('latitude').text();
+    }
+);
+
+
 //Get the current position
     function fGetCurrentPosition() 
     {
       if(navigator.geolocation){
         //get position from GPS
-        return ViaMichelin.Api.Constants.Map.FROM_GEOLOCATION;  
+        return { coords : {lon: longitude, lat: latitude}}; 
       }else{
         return { coords : {lon: 4.83642, lat: 45.75724}};
       }
     };
+    
     var myMap = null;
 
     function fGetBestConf(conf) {
