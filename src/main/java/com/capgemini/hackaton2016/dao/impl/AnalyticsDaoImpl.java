@@ -77,7 +77,7 @@ public class AnalyticsDaoImpl implements AnalyticsDao {
                     a.setIdMessage(rs.getLong(ID_MESSAGE));
                     a.setLatitude(rs.getBigDecimal(LATITUDE));
                     a.setLongitude(rs.getBigDecimal(LONGITUDE));
-                    a.setTimestamp(rs.getDate(TIMESTAMP));
+                    a.setTimestamp(rs.getTimestamp(TIMESTAMP));
                     a.setPression(rs.getBigDecimal(PRESSION));
                     a.setAlerte(rs.getBoolean(ALERTE));
 
