@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.annotation.Resource;
 import javax.enterprise.context.RequestScoped;
@@ -57,7 +58,7 @@ public class AnalyticsDaoImpl implements AnalyticsDao {
                             + "m.date_creation AS timestamp, "
                             + "m.id_trajet AS idTrajet, "
                             + "m.pression AS pression, "
-                            + "t.id_camion AS idCamion, "
+                            + "p.id_camion AS idCamion, "
                             + "(CASE WHEN p.pression_normale > m.pression THEN 'true' "
                             + "ELSE 'false' END) AS alerte "
                             + "from message m "

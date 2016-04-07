@@ -30,7 +30,7 @@ public class MessageDaoImpl implements MessageDao {
     private DataSource ds;
 
     @Override
-    public Message recupererInfoMessage(String idAppareil, Date date) 
+    public Message recupererInfoMessage(String idAppareil, int positionPneu, Date date)
             throws SQLException {
         Message msg = null;
         Connection cnx = null;
@@ -40,9 +40,10 @@ public class MessageDaoImpl implements MessageDao {
             cnx = ds.getConnection();
             cnx.setAutoCommit(false);
             ps = cnx.prepareStatement(
-                    "select id_pneu from pneu where id_appareil like ?"
+                    "select id_pneu from pneu where id_appareil like ? and position = ?"
             );
             ps.setString(1, idAppareil);
+            ps.setShort(2, (short) positionPneu);
             ps.setMaxRows(1);
 
             ResultSet rs = ps.executeQuery();
@@ -58,7 +59,7 @@ public class MessageDaoImpl implements MessageDao {
                         "join pneu p on c.id_camion = p.id_camion " +
                         "where ? between t.date_depart and t.date_arrivee"
                 );
-                ps.setDate(1, new java.sql.Date(date.getTime()));
+                ps.setTimestamp(1, new java.sql.Timestamp(date.getTime()));
                 ps.setMaxRows(1);
                 rs = ps.executeQuery();
                 
@@ -105,7 +106,7 @@ public class MessageDaoImpl implements MessageDao {
             ps.setBigDecimal(3, msg.getLatitude());
             ps.setBigDecimal(4, msg.getLongitude());
             ps.setBigDecimal(5, msg.getPression());
-            ps.setDate(6, new java.sql.Date(msg.getDateCreation().getTime()));
+            ps.setTimestamp(6, new java.sql.Timestamp(msg.getDateCreation().getTime()));
             ps.executeUpdate();
         } catch (Exception e) {
             log.error("Erreur de BDD", e);

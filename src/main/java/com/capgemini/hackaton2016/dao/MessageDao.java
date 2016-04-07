@@ -10,7 +10,7 @@ import java.util.Date;
  */
 public interface MessageDao {
     
-    public Message recupererInfoMessage(String idAppareil, Date date) 
+    Message recupererInfoMessage(String idAppareil, int positionPneu, Date date)
             throws SQLException;
     
     void insererMessage(Message msg) throws SQLException;

@@ -24,17 +24,20 @@ public class ReceptionMessageServiceImpl implements ReceptionMessageService {
     private final Log log = LogFactory.getLog("Services");
 
     @Override
-    public void enregistrerMessage(String idAppareil, Date date, 
-            BigDecimal latitude, BigDecimal longitude, BigDecimal pression) {
+    public void enregistrerMessage(String idAppareil, Date date, BigDecimal latitude, BigDecimal longitude,
+                                   BigDecimal[] pressions) {
         
         try {
-            Message msg = messageDao.recupererInfoMessage(idAppareil, date);
-            msg.setLatitude(latitude);
-            msg.setLongitude(longitude);
-            msg.setPression(pression);
-            msg.setDateCreation(date);
-            
-            messageDao.insererMessage(msg);
+            for (int pos = 0; pos < pressions.length; pos++) {
+                BigDecimal pression = pressions[pos];
+                Message msg = messageDao.recupererInfoMessage(idAppareil, pos + 1, date);
+                msg.setLatitude(latitude);
+                msg.setLongitude(longitude);
+                msg.setPression(pression);
+                msg.setDateCreation(date);
+
+                messageDao.insererMessage(msg);
+            }
         } catch (SQLException e) {
             log.error("Impossible de faire l'insertion", e);
         }

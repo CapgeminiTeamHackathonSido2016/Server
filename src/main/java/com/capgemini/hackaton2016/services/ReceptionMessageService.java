@@ -8,7 +8,7 @@ import java.util.Date;
  * @author afbustamante
  */
 public interface ReceptionMessageService {
-    
-    void enregistrerMessage(String idAppareil, Date date, BigDecimal latitude, 
-            BigDecimal longitude, BigDecimal pression);
+
+    void enregistrerMessage(String idAppareil, Date date, BigDecimal latitude,
+                            BigDecimal longitude, BigDecimal[] pressions);
 }
